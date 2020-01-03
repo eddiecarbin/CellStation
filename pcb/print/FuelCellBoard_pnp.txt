@@ -1,0 +1,38 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=FuelCellBoard
+*Date=11:04:54
+*CreatedBy=Fritzing 0.9.4.2019-12-01.CD-498-0-a1ffcea
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;THT;40.5288;-21.5513;0;Bottom;Power 5v
+2;;;45.5508;-71.441;0;Bottom;Hole2
+3;;THT;6.37822;-58.8574;0;Bottom;Output
+4;;;2.79103;-2.563;0;Bottom;Hole4
+5;;;3.0165;-53.1688;0;Bottom;TXT1
+6;;THT;8.85104;-25.0796;0;Bottom;Vol
+7;220;1206 [SMD];38.2601;-58.8585;0;Top;R12
+8;;;43.4738;-23.8744;0;Bottom;TXT1
+9;;;9.03013;-39.4707;0;Bottom;TXT1
+10;10;THT;22.645;-40.0417;90;Bottom;R1
+11;220;1206 [SMD];38.2601;-54.399;0;Top;R13
+12;;THT;44.6085;-50.9994;0;Bottom;Input
+13;;;24.1021;-47.504;180;Bottom;Arduino Micro
+14;220;1206 [SMD];38.2601;-47.2282;0;Top;R4
+15;220;1206 [SMD];38.2601;-63.4344;0;Top;R11
+16;220;1206 [SMD];38.2601;-42.8199;0;Top;R3
+17;;THT;6.34087;-36.9003;0;Bottom;Power VIN
+18;220;1206 [SMD];38.2601;-38.2292;0;Top;R10
+19;;;43.4408;-19.0661;0;Bottom;TXT1
+20;;;22.9998;-10.5811;0;Bottom;DFRobot DFPlayer Mini1
+21;;;2.79103;-71.3745;0;Bottom;Hole3
+22;;;45.5588;-2.73516;0;Bottom;Hole1
+23;;THT;7.33974;-10.4741;0;Bottom;Speaker
