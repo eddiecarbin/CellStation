@@ -1,18 +1,29 @@
 
 #include <FuelCellController.h>
 
-FuelCellController::FuelCellController(int cell){
-    this->totalCells = cell;
+FuelCellController::FuelCellController(int cells, int panelPin)
+{
+    this->totalCells = cells;
+    this->completePanelPin = panelPin;
 }
 
-FuelCellController::initialize(){
-
+void FuelCellController::initialize(struct CRGB *data)
+{
+    this->_leds = data;
 }
 
-FuelCellController::update(){
-
+FuelCellState FuelCellController::getState()
+{
+    return currentState;
 }
 
-FuelCellController::~FuelCellController(){
+void FuelCellController::update()
+{
+    if (currentState == FuelCellState::FULL)
+    {
+    }
+}
 
+FuelCellController::~FuelCellController()
+{
 }
