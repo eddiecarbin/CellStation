@@ -7,6 +7,7 @@
 
 enum FuelCellState
 {
+    NONE,
     FULL,
     EMPTY,
     COMPLETE

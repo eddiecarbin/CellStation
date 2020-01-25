@@ -21,7 +21,7 @@ void FuelCellController::update()
 {
     if (currentState == FuelCellState::FULL)
     {
-    }
+    } 
 }
 
 FuelCellController::~FuelCellController()
