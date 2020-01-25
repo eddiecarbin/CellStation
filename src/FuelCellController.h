@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "FastLED.h" // FastLED library. Preferably the latest copy of FastLED 2.1.
 #include <FastLED.h> // for short list
+#include <JC_Button.h>
 
 enum FuelCellState
 {
@@ -18,7 +19,7 @@ class FuelCellController
 public:
     FuelCellController(int cells, int panelPin);
     FuelCellState getState(void);
-    void initialize(struct CRGB *data);
+    void initialize(struct CRGB *data, Button* lever);
     void update(void);
     virtual ~FuelCellController();
 
@@ -27,6 +28,7 @@ private:
     int cellCount;
     FuelCellState currentState;
     CRGB *_leds;
+    Button* lever;
     int completePanelPin;
 };
 

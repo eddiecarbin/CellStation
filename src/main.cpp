@@ -129,9 +129,9 @@ void setup()
   tubeSwitch1.begin();
   tubeSwitch2.begin();
 
-  FuelTube0.initialize(pipeLeds0);
-  FuelTube1.initialize(pipeLeds1);
-  FuelTube2.initialize(pipeLeds2);
+  FuelTube0.initialize(pipeLeds0, &tubeSwitch0);
+  FuelTube1.initialize(pipeLeds1, &tubeSwitch1);
+  FuelTube2.initialize(pipeLeds2, &tubeSwitch2);
 
   soundPlayer.initialize();
 
