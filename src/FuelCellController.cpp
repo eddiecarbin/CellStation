@@ -28,6 +28,30 @@ void FuelCellController::update()
         {
             Serial.println("Release the fuel cells");
             currentState = FuelCellState::EMPTY;
+            cellCount = 0;
+        }
+    }
+    else if (currentState == FuelCellState::FILLING)
+    {
+
+        if (lever->wasReleased())
+        {
+            Serial.println("lever was pressed");
+            cellCount += 1;
+        }
+
+        if (lever->pressedFor(2000) && cellCount >= totalCells)
+        {
+            currentState = FuelCellState::FULL;
+
+        }
+    }
+    else if (currentState == FuelCellState::EMPTY)
+    {
+        if (lever->wasReleased())
+        {
+            Serial.println("lever was pressed");
+            cellCount += 1;
         }
     }
 }

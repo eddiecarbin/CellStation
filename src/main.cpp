@@ -66,7 +66,7 @@ void OnStateStartGameUpdate()
   FuelTube0.update();
   FuelTube1.update();
   FuelTube2.update();
-
+/* 
   if (tubeSwitch0.wasReleased())
   {
     Serial.println("red is pressed");
@@ -78,7 +78,7 @@ void OnStateStartGameUpdate()
   if (tubeSwitch2.wasReleased())
   {
     Serial.println("yellow is pressed");
-  }
+  } */
 
   if (FuelTube0.getState() == FuelCellState::FULL &&
       FuelTube1.getState() == FuelCellState::FULL &&

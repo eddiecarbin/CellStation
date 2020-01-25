@@ -11,7 +11,7 @@ enum FuelCellState
     NONE,
     FULL,
     EMPTY,
-    COMPLETE
+    FILLING
 };
 
 class FuelCellController
