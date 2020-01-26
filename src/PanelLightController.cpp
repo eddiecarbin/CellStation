@@ -6,8 +6,8 @@ PanelLightController::PanelLightController(int pin)
 
     this->pin = pin;
     pinMode(pin, OUTPUT);
+    digitalWrite(pin, PanelStateEnum::OFF);
 }
-
 
 PanelStateEnum PanelLightController::getState()
 {

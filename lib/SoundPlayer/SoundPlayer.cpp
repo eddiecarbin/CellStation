@@ -5,6 +5,8 @@
 #include "DFRobotDFPlayerMini.h"
 #include "SoftwareSerial.h"
 
+SoundPlayer *SoundPlayer::s_instance = 0;
+
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 
 int fileCount = 0;
@@ -39,6 +41,12 @@ void SoundPlayer::initialize()
     fileCount = myDFPlayer.readFileCounts();
     // myDFPlayer.play(1); //Play the first mp3
 
+    // myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
+    //  myDFPlayer.EQ(DFPLAYER_EQ_POP);
+    //  myDFPlayer.EQ(DFPLAYER_EQ_ROCK);
+     myDFPlayer.EQ(DFPLAYER_EQ_JAZZ);
+    //  myDFPlayer.EQ(DFPLAYER_EQ_CLASSIC);
+    //  myDFPlayer.EQ(DFPLAYER_EQ_BASS);
     Serial.print("file count = ");
     Serial.println(fileCount);
 }

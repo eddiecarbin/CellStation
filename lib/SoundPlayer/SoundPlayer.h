@@ -11,6 +11,13 @@
 
 class SoundPlayer
 {
+
+    static SoundPlayer *s_instance;
+    SoundPlayer(int v = 0)
+    {
+        // m_value = v;
+    }
+
 public:
     SoundPlayer(int pin, int tollerance);
     void initialize(void);
@@ -20,6 +27,13 @@ public:
     void StopSound(void);
     void update(void);
     virtual ~SoundPlayer();
+
+    static SoundPlayer *instance()
+    {
+        if (!s_instance)
+            s_instance = new SoundPlayer;
+        return s_instance;
+    }
 
 private:
     int pin;
