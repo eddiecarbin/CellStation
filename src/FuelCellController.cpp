@@ -1,7 +1,6 @@
 
 #include <FuelCellController.h>
 #include "../lib/SoundPlayer/SoundPlayer.h"
-
 FuelCellController::FuelCellController(int cells, int leds)
 {
     this->totalCells = cells;
@@ -14,6 +13,17 @@ void FuelCellController::initialize(struct CRGB *data, Button *lever, PanelLight
     this->_leds = data;
     this->lever = lever;
     this->panel = p;
+
+
+    // fillingAnimation = FillingAnimation(1);
+
+    // fillingAnimation->update();
+    //  empty animation
+    //  filling animation
+    //  complete animation
+    // emptyAnimation = new EmptyAnimation();
+    // completeAnimation = new CompleteAnimation(1);
+    // currentAnimation
 }
 
 void FuelCellController::drawColor(CRGB color)
@@ -36,12 +46,11 @@ void FuelCellController::update()
 
     if (currentState == FuelCellState::FULL)
     {
-        drawColor(CRGB::Green);
-
+        drawColor(CRGB::DarkGreen);
         if (lever->wasPressed())
         {
             Serial.println("Release the fuel cells");
-            SoundPlayer::instance()->PlaySound(2);
+            // SoundPlayer::instance()->PlaySound(2);
             panel->setState(PanelStateEnum::OFF);
             currentState = FuelCellState::EMPTY;
             cellCount = 0;
@@ -53,7 +62,7 @@ void FuelCellController::update()
 
         if (lever->wasReleased())
         {
-            SoundPlayer::instance()->PlaySound(1);
+            // SoundPlayer::instance()->PlaySound(1);
 
             cellCount += 1;
             Serial.println("lever was pressed filling: " + String(totalCells) + ", " + String(cellCount));
@@ -74,7 +83,7 @@ void FuelCellController::update()
             cellCount += 1;
             Serial.println("lever was pressed state empty: " + String(totalCells) + ", " + String(cellCount));
 
-            SoundPlayer::instance()->PlaySound(1);
+            // SoundPlayer::instance()->PlaySound(1);
             currentState = FuelCellState::FILLING;
         }
     }

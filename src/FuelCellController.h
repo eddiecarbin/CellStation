@@ -20,7 +20,7 @@ class FuelCellController
 public:
     FuelCellController(int cells, int leds);
     FuelCellState getState(void);
-    void initialize(struct CRGB *data, Button *lever, PanelLightController* p);
+    void initialize(struct CRGB *data, Button *lever, PanelLightController *p);
     void update(void);
     void drawColor(CRGB color);
 
@@ -33,6 +33,8 @@ private:
     CRGB *_leds;
     Button *lever;
     int totalLeds;
+    // EmptyAnimation fillingAnimation;
+    // CompleteAnimation* completeAnimation;
     PanelLightController *panel;
 };
 

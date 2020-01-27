@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "../lib/SoundPlayer/SoundPlayer.h"
 #include "../lib/PotMonitor/PotMonitor.h"
-#include "../lib/FSM/FSM.h"
 
 #include <JC_Button.h>
 #include "PanelLightController.h"
@@ -25,9 +24,9 @@
 #define FUEL_SWITCH_PIN1 A2
 #define FUEL_SWITCH_PIN2 A3
 
-#define NUM_PIPE_LEDS0 8
-#define NUM_PIPE_LEDS1 8
-#define NUM_PIPE_LEDS2 8
+#define NUM_PIPE_LEDS0 10
+#define NUM_PIPE_LEDS1 15
+#define NUM_PIPE_LEDS2 20
 
 #define GO_TO_GAME_LOOP 1
 #define GO_TO_START_GAME 2
@@ -52,31 +51,6 @@ PanelLightController panelController0(PANEL_LED_PIN0);
 PanelLightController panelController1(PANEL_LED_PIN1);
 PanelLightController panelController2(PANEL_LED_PIN2);
 
-State StateDoNothing(NULL, NULL, NULL);
-Fsm fsm(&StateDoNothing);
-
-//Setup game board
-void OnStartGameEnter()
-{
-}
-
-void OnStateStartGameUpdate()
-{
-  FuelTube0.update();
-  FuelTube1.update();
-  FuelTube2.update();
-
-  if (FuelTube0.getState() == FuelCellState::FULL &&
-      FuelTube1.getState() == FuelCellState::FULL &&
-      FuelTube2.getState() == FuelCellState::FULL)
-  {
-
-    Serial.println("all tubes are full");
-  }
-}
-
-State StateStartGame(&OnStartGameEnter, &OnStateStartGameUpdate, NULL);
-
 long map2(long x, long in_min, long in_max, long out_min, long out_max)
 {
   return (x - in_min) * (out_max - out_min + 1) / (in_max - in_min + 1) + out_min;
@@ -88,10 +62,13 @@ void setup()
   delay(5000);
 
   SoundPlayer::instance()->initialize();
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN0, BRG>(pipeLeds0, NUM_PIPE_LEDS0);
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN1, BRG>(pipeLeds1, NUM_PIPE_LEDS1);
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN2, BRG>(pipeLeds2, NUM_PIPE_LEDS2);
 
-  FastLED.addLeds<UCS1903, TUBE_LED_PIN0, BRG>(pipeLeds0, NUM_PIPE_LEDS0);
-  FastLED.addLeds<UCS1903, TUBE_LED_PIN1, BRG>(pipeLeds1, NUM_PIPE_LEDS1);
-  FastLED.addLeds<UCS1903, TUBE_LED_PIN2, BRG>(pipeLeds2, NUM_PIPE_LEDS2);
+  // FastLED.addLeds<NEOPIXEL, TUBE_LED_PIN0>(pipeLeds0, NUM_PIPE_LEDS0);
+  // FastLED.addLeds<NEOPIXEL, TUBE_LED_PIN1>(pipeLeds1, NUM_PIPE_LEDS1);
+  // FastLED.addLeds<NEOPIXEL, TUBE_LED_PIN2>(pipeLeds2, NUM_PIPE_LEDS2);
   FastLED.setBrightness(BRIGHTNESS);
 
   tubeSwitch0.begin();
@@ -101,9 +78,6 @@ void setup()
   FuelTube0.initialize(pipeLeds0, &tubeSwitch0, &panelController0);
   FuelTube1.initialize(pipeLeds1, &tubeSwitch1, &panelController1);
   FuelTube2.initialize(pipeLeds2, &tubeSwitch2, &panelController2);
-
-
-  fsm.goToState(&StateStartGame);
 }
 
 void loop()
@@ -114,7 +88,17 @@ void loop()
     // Serial.println(volume);
     SoundPlayer::instance()->volume(volume);
   }
-  fsm.run_machine();
+  FuelTube0.update();
+  FuelTube1.update();
+  FuelTube2.update();
+
+  if (FuelTube0.getState() == FuelCellState::FULL &&
+      FuelTube1.getState() == FuelCellState::FULL &&
+      FuelTube2.getState() == FuelCellState::FULL)
+  {
+
+    Serial.println("all tubes are full");
+  }
 
   FastLED.show();
 
