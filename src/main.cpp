@@ -28,9 +28,6 @@
 #define NUM_PIPE_LEDS1 15
 #define NUM_PIPE_LEDS2 20
 
-#define GO_TO_GAME_LOOP 1
-#define GO_TO_START_GAME 2
-
 PotMonitor volumePot(A5, 12);
 // SoundPlayer soundPlayer(18, 15);
 
