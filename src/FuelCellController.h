@@ -6,6 +6,7 @@
 #include <FastLED.h> // for short list
 #include <JC_Button.h>
 #include "PanelLightController.h"
+#include "LEDAnimations.cpp"
 
 enum FuelCellState
 {
@@ -33,8 +34,6 @@ private:
     CRGB *_leds;
     Button *lever;
     int totalLeds;
-    // EmptyAnimation fillingAnimation;
-    // CompleteAnimation* completeAnimation;
     PanelLightController *panel;
 };
 

@@ -46,6 +46,8 @@ void FuelCellController::update()
 
     if (currentState == FuelCellState::FULL)
     {
+        LEDAnimations::TheaterChaseRainbow(50);
+        
         drawColor(CRGB::DarkGreen);
         if (lever->wasPressed())
         {
@@ -58,8 +60,9 @@ void FuelCellController::update()
     }
     else if (currentState == FuelCellState::FILLING)
     {
-        drawColor(CRGB::White);
+        // drawColor(CRGB::White);
 
+        LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
         if (lever->wasReleased())
         {
             // SoundPlayer::instance()->PlaySound(1);
@@ -77,7 +80,9 @@ void FuelCellController::update()
     }
     else if (currentState == FuelCellState::EMPTY)
     {
-        drawColor(CRGB::Red);
+        LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
+
+        // drawColor(CRGB::Red);
         if (lever->wasReleased())
         {
             cellCount += 1;

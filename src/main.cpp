@@ -9,7 +9,7 @@
 
 #include <FastLED.h> // for short list
 
-#define FRAME_PER_SECOND 60
+#define FRAME_PER_SECOND 1000 / 120
 #define BRIGHTNESS 100
 
 #define TUBE_LED_PIN0 2
@@ -102,5 +102,5 @@ void loop()
 
   FastLED.show();
 
-  delay(1000 / FRAME_PER_SECOND);
+  delay(FRAME_PER_SECOND);
 }
