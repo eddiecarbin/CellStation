@@ -46,13 +46,13 @@ void FuelCellController::update()
 
     if (currentState == FuelCellState::FULL)
     {
-        LEDAnimations::TheaterChaseRainbow(50);
+        //LEDAnimations::TheaterChaseRainbow(50);
         
         drawColor(CRGB::DarkGreen);
         if (lever->wasPressed())
         {
             Serial.println("Release the fuel cells");
-            // SoundPlayer::instance()->PlaySound(2);
+             SoundPlayer::instance()->PlaySound(2);
             panel->setState(PanelStateEnum::OFF);
             currentState = FuelCellState::EMPTY;
             cellCount = 0;
@@ -60,12 +60,12 @@ void FuelCellController::update()
     }
     else if (currentState == FuelCellState::FILLING)
     {
-        // drawColor(CRGB::White);
+        drawColor(CRGB::White);
 
-        LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
+        //LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
         if (lever->wasReleased())
         {
-            // SoundPlayer::instance()->PlaySound(1);
+            SoundPlayer::instance()->PlaySound(1);
 
             cellCount += 1;
             Serial.println("lever was pressed filling: " + String(totalCells) + ", " + String(cellCount));
@@ -77,18 +77,19 @@ void FuelCellController::update()
             currentState = FuelCellState::FULL;
             panel->setState(PanelStateEnum::ON);
         }
+
     }
     else if (currentState == FuelCellState::EMPTY)
     {
-        LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
+        //LEDAnimations::CylonBounce(0xff, 0, 0, 4, 10, 50);
 
-        // drawColor(CRGB::Red);
+        drawColor(CRGB::Red);
         if (lever->wasReleased())
         {
             cellCount += 1;
             Serial.println("lever was pressed state empty: " + String(totalCells) + ", " + String(cellCount));
 
-            // SoundPlayer::instance()->PlaySound(1);
+            SoundPlayer::instance()->PlaySound(1);
             currentState = FuelCellState::FILLING;
         }
     }

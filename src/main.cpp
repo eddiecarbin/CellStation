@@ -29,7 +29,7 @@
 #define NUM_PIPE_LEDS2 20
 
 PotMonitor volumePot(A5, 12);
-// SoundPlayer soundPlayer(18, 15);
+//SoundPlayer soundPlayer(18, 15);
 
 //https://github.com/FastLED/FastLED/wiki/Multiple-Controller-Examples
 CRGB pipeLeds0[NUM_PIPE_LEDS0];

@@ -44,7 +44,7 @@ void SoundPlayer::initialize()
     // myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
     //  myDFPlayer.EQ(DFPLAYER_EQ_POP);
     //  myDFPlayer.EQ(DFPLAYER_EQ_ROCK);
-     myDFPlayer.EQ(DFPLAYER_EQ_JAZZ);
+    myDFPlayer.EQ(DFPLAYER_EQ_JAZZ);
     //  myDFPlayer.EQ(DFPLAYER_EQ_CLASSIC);
     //  myDFPlayer.EQ(DFPLAYER_EQ_BASS);
     Serial.print("file count = ");
@@ -72,6 +72,9 @@ bool SoundPlayer::isPlaying()
 
 void SoundPlayer::PlaySound(int value = 1)
 {
+    if (soundPlaying  == true)
+        return;
+
     soundPlaying = true;
     myDFPlayer.play(value); //Play the first mp3
 }
