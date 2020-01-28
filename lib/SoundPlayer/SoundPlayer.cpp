@@ -49,6 +49,8 @@ void SoundPlayer::initialize()
     //  myDFPlayer.EQ(DFPLAYER_EQ_BASS);
     Serial.print("file count = ");
     Serial.println(fileCount);
+
+    soundPlaying = false;
 }
 
 void SoundPlayer::update()
@@ -72,8 +74,11 @@ bool SoundPlayer::isPlaying()
 
 void SoundPlayer::PlaySound(int value = 1)
 {
-    if (soundPlaying  == true)
-        return;
+    if (soundPlaying == true)
+    {
+        // Serial.println("sound is playing stop!");
+        //return;
+    }
 
     soundPlaying = true;
     myDFPlayer.play(value); //Play the first mp3

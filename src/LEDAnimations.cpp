@@ -18,6 +18,26 @@ public:
         // leds[Pixel].b = blue;
     }
 
+    static void sinlon(CRGB* leds, uint16_t numLeds, const struct CRGB& color)
+    {
+        // Updated sinelon (no visual gaps)
+        // a colored dot sweeping
+        // back and forth, with
+        // fading trails
+        fadeToBlackBy(leds, numLeds, 20);
+        int pos = beatsin16(13, 0, numLeds);
+        static int prevpos = 0;
+        if (pos < prevpos)
+        {
+            fill_solid(leds + pos, (prevpos - pos) + 1,color);
+        }
+        else
+        {
+            fill_solid(leds + prevpos, (pos - prevpos) + 1, color);
+        }
+        prevpos = pos;
+    }
+
     static void pause(unsigned long period)
     {
         unsigned long time_now = millis();
