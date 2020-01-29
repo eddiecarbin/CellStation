@@ -22,16 +22,6 @@ void FuelCellController::initialize(struct CRGB *data, Button *lever, PanelLight
     currentPalette = OceanColors_p;
     pause = 0;
     timebase = millis();
-
-    // fillingAnimation = FillingAnimation(1);
-
-    // fillingAnimation->update();
-    //  empty animation
-    //  filling animation
-    //  complete animation
-    // emptyAnimation = new EmptyAnimation();
-    // completeAnimation = new CompleteAnimation(1);
-    // currentAnimation
 }
 
 void FuelCellController::drawColor(CRGB color)
@@ -49,7 +39,6 @@ FuelCellState FuelCellController::getState()
 
 void FuelCellController::update()
 {
-
     lever->read();
 
     if (currentState == FuelCellState::FULL)
@@ -111,7 +100,6 @@ void FuelCellController::update()
         { // FastLED based non-blocking delay to update/display the sequence.
 
             sinlon( CRGB::Red); // Call our sequence.
-
             // test();
             pause = millis() + 50;
         }
