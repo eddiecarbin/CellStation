@@ -24,7 +24,6 @@ public:
     void initialize(struct CRGB *data, Button *lever, PanelLightController *p);
     void update(void);
     void drawColor(CRGB color);
-    void sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color);
     virtual ~FuelCellController();
 
 private:
@@ -38,9 +37,12 @@ private:
     int prevpos;
     int index;
     PanelLightController *panel;
-    void plasma();
-    void sawtooth();
-    void fire();
+    void plasma(void);
+    void test(void);
+    void sinlon(const struct CRGB &color);
+    void sawtooth(void);
+    uint32_t timebase;
+
     CRGBPalette16 currentPalette; // Palette definitions
     // CRGBPalette16 targetPalette;
 };

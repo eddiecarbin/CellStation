@@ -21,6 +21,8 @@ void FuelCellController::initialize(struct CRGB *data, Button *lever, PanelLight
     this->panel = p;
     currentPalette = OceanColors_p;
     pause = 0;
+    timebase = millis();
+
     // fillingAnimation = FillingAnimation(1);
 
     // fillingAnimation->update();
@@ -67,19 +69,21 @@ void FuelCellController::update()
             Serial.println("Release the fuel cells");
             SoundPlayer::instance()->PlaySound(2);
             panel->setState(PanelStateEnum::OFF);
+            FastLED.clear ();
             currentState = FuelCellState::EMPTY;
+
+            timebase = millis();
             cellCount = 0;
         }
     }
     else if (currentState == FuelCellState::FILLING)
     {
-        // drawColor(CRGB::White);
         if (millis() > pause)
         { // FastLED based non-blocking delay to update/display the sequence.
             //sinlon(_leds, totalLeds, CRGB::Red); // Call our sequence.
             //plasma();
+            currentPalette = CloudColors_p;
             sawtooth();
-            currentPalette = PartyColors_p;
             pause = millis() + 50;
         }
 
@@ -94,29 +98,21 @@ void FuelCellController::update()
         if (lever->releasedFor(LAST_BLOCK_TIME) && cellCount >= totalCells)
         {
             Serial.println("last block is on hold");
+            FastLED.clear ();
             currentState = FuelCellState::FULL;
+            timebase = millis();
+            
             panel->setState(PanelStateEnum::ON);
         }
     }
     else if (currentState == FuelCellState::EMPTY)
     {
-
-        //drawColor(CRGB::Red);
-
         if (millis() > pause)
         { // FastLED based non-blocking delay to update/display the sequence.
 
-            //currentPalette = LavaColors_p;
+            sinlon( CRGB::Red); // Call our sequence.
 
-            sinlon(_leds, totalLeds, CRGB::Red); // Call our sequence.
-            //plasma();
-            /* currentPalette = CRGBPalette16(
-                CRGB::Black, CRGB::Black, CRGB::Black, CHSV(0, 255, 4),
-                CHSV(0, 255, 8), CRGB::Red, CRGB::Red, CRGB::Red,
-                CRGB::DarkOrange, CRGB::Orange, CRGB::Orange, CRGB::Orange,
-                CRGB::Yellow, CRGB::Yellow, CRGB::Gray, CRGB::Gray);
-            fire(); */
-            // currentPalette = PartyColors_p;
+            // test();
             pause = millis() + 50;
         }
 
@@ -126,41 +122,29 @@ void FuelCellController::update()
             Serial.println("lever was pressed state empty: " + String(totalCells) + ", " + String(cellCount));
 
             SoundPlayer::instance()->PlaySound(1);
+            FastLED.clear ();
+            timebase = millis();
+
             currentState = FuelCellState::FILLING;
         }
     }
 }
-/* 
-void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color)
-{
-    uint8_t thisbeat = 23; // Beats per minute for first part of dot.
-    uint8_t thatbeat = 28; // Combined the above with this one.
-    uint8_t thisfade = 32; // How quickly does it fade? Lower = slower fade rate.
-    // uint8_t thissat = 255; // The saturation, where 255 = brilliant colours.
-    uint8_t thisbri = 255; // Brightness of a sequence.
-    int myhue = 0;
-    fadeToBlackBy(leds, totalLeds, thisfade);
-    int pos1 = beatsin16(thisbeat, 0, totalLeds);
-    int pos2 = beatsin16(thatbeat, 0, totalLeds);
 
-    leds[(pos1 + pos2) / 2] += ColorFromPalette(currentPalette, myhue++, thisbri, LINEARBLEND);
-} */
-void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color)
+void FuelCellController::sinlon( const struct CRGB &color)
 {
     //     // Updated sinelon (no visual gaps)
     //     // a colored dot sweeping
     //     // back and forth, with
     //     // fading trails
-    fadeToBlackBy(leds, numLeds, 100);
-    int pos = beatsin16(13, 0, numLeds);
-    prevpos = 0;
+    fadeToBlackBy(_leds, totalLeds, 50);
+    int pos = beatsin16(13, 0, totalLeds, timebase);
     if (pos < prevpos)
     {
-        fill_solid(leds + pos, (prevpos - pos) + 1, color);
+        fill_solid(_leds + pos, (prevpos - pos) + 1, color);
     }
     else
     {
-        fill_solid(leds + prevpos, (pos - prevpos) + 1, color);
+        fill_solid(_leds + prevpos, (pos - prevpos) + 1, color);
     }
     prevpos = pos;
 }
@@ -177,10 +161,14 @@ void FuelCellController::plasma()
     { // For each of the LED's in the strand, set a brightness based on a wave as follows:
 
         int colorIndex = cubicwave8((k * 23) + thisPhase) / 2 + cos8((k * 15) + thatPhase) / 2; // Create a wave and add a phase change and add another wave with its own phase change.. Hey, you can even change the frequencies if you wish.
-        int thisBright = qsuba(colorIndex, beatsin8(7, 0, 96));                                 // qsub gives it a bit of 'black' dead space by setting sets a minimum value. If colorIndex < current value of beatsin8(), then bright = 0. Otherwise, bright = colorIndex..
+        int thisBright = qsuba(colorIndex, beatsin8(7, 0, 96, timebase));                                 // qsub gives it a bit of 'black' dead space by setting sets a minimum value. If colorIndex < current value of beatsin8(), then bright = 0. Otherwise, bright = colorIndex..
 
         _leds[k] = ColorFromPalette(currentPalette, colorIndex, thisBright, LINEARBLEND); // Let's now add the foreground colour.
     }
+}
+
+void FuelCellController::test()
+{
 }
 
 //https://github.com/atuline/FastLED-Demos/tree/master/sawtooth
@@ -202,18 +190,7 @@ void FuelCellController::sawtooth()
 } // sawtooth()
 
 //https://github.com/atuline/FastLED-Demos/blob/master/inoise8_fire/inoise8_fire.ino
-void FuelCellController::fire()
-{
 
-    uint32_t xscale = 20; // How far apart they are
-    uint32_t yscale = 10;
-    for (int i = 0; i < totalLeds; i++)
-    {
-        index = inoise8(i * xscale, millis() * yscale * totalLeds / 255);                                          // X location is constant, but we move along the Y at the rate of millis()
-        _leds[i] = ColorFromPalette(currentPalette, min(i * (index) >> 6, 255), i * 255 / totalLeds, LINEARBLEND); // With that value, look up the 8 bit colour palette value and assign it to the current LED.
-    }                                                                                                              // The higher the value of i => the higher up the palette index (see palette definition).
-                                                                                                                   // Also, the higher the value of i => the brighter the LED.
-}
 
 FuelCellController::~FuelCellController()
 {
