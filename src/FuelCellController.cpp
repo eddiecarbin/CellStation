@@ -105,14 +105,17 @@ void FuelCellController::update()
 
         if (millis() > pause)
         { // FastLED based non-blocking delay to update/display the sequence.
-            //sinlon(_leds, totalLeds, CRGB::Red); // Call our sequence.
+
+            //currentPalette = LavaColors_p;
+
+            sinlon(_leds, totalLeds, CRGB::Red); // Call our sequence.
             //plasma();
-            currentPalette = CRGBPalette16(
+            /* currentPalette = CRGBPalette16(
                 CRGB::Black, CRGB::Black, CRGB::Black, CHSV(0, 255, 4),
                 CHSV(0, 255, 8), CRGB::Red, CRGB::Red, CRGB::Red,
                 CRGB::DarkOrange, CRGB::Orange, CRGB::Orange, CRGB::Orange,
                 CRGB::Yellow, CRGB::Yellow, CRGB::Gray, CRGB::Gray);
-            fire();
+            fire(); */
             // currentPalette = PartyColors_p;
             pause = millis() + 50;
         }
@@ -127,7 +130,7 @@ void FuelCellController::update()
         }
     }
 }
-
+/* 
 void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color)
 {
     uint8_t thisbeat = 23; // Beats per minute for first part of dot.
@@ -141,26 +144,26 @@ void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB 
     int pos2 = beatsin16(thatbeat, 0, totalLeds);
 
     leds[(pos1 + pos2) / 2] += ColorFromPalette(currentPalette, myhue++, thisbri, LINEARBLEND);
+} */
+void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color)
+{
+    //     // Updated sinelon (no visual gaps)
+    //     // a colored dot sweeping
+    //     // back and forth, with
+    //     // fading trails
+    fadeToBlackBy(leds, numLeds, 100);
+    int pos = beatsin16(13, 0, numLeds);
+    prevpos = 0;
+    if (pos < prevpos)
+    {
+        fill_solid(leds + pos, (prevpos - pos) + 1, color);
+    }
+    else
+    {
+        fill_solid(leds + prevpos, (pos - prevpos) + 1, color);
+    }
+    prevpos = pos;
 }
-// void FuelCellController::sinlon(CRGB *leds, uint16_t numLeds, const struct CRGB &color)
-// {
-//     // Updated sinelon (no visual gaps)
-//     // a colored dot sweeping
-//     // back and forth, with
-//     // fading trails
-//     fadeToBlackBy(leds, numLeds, 100);
-//     int pos = beatsin16(13, 0, numLeds);
-//     prevpos = 0;
-//     if (pos < prevpos)
-//     {
-//         fill_solid(leds + pos, (prevpos - pos) + 1, color);
-//     }
-//     else
-//     {
-//         fill_solid(leds + prevpos, (pos - prevpos) + 1, color);
-//     }
-//     prevpos = pos;
-// }
 
 //https://github.com/atuline/FastLED-Demos/blob/master/plasma/plasma.ino
 
