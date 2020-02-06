@@ -2,25 +2,24 @@
 #define PANELLIGHTCONTROLLER_H_
 
 #include <Arduino.h>
+#include "FastLED.h" // FastLED library. Preferably the latest copy of FastLED 2.1.
+#include <FastLED.h> // for short list
 
-enum PanelStateEnum{
-    OFF,
-    ON
-};
+#define TOTAL_LEDS 24
 
 class PanelLightController
 {
 public:
     PanelLightController(int pin);
-    PanelStateEnum getState(void);
-    void setState( PanelStateEnum data );
-    void initialize();
+    void setState(int panelID, CRGB color);
+    void initialize(struct CRGB *data);
     void update(void);
     virtual ~PanelLightController();
 
 private:
     int pin;
-    PanelStateEnum currentState;
+    CRGB *_leds;
+    void drawLed(CRGB color);
 };
 
 #endif /* PANELLIGHTCONTROLLER_H_ */

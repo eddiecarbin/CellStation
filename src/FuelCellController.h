@@ -19,7 +19,7 @@ enum FuelCellState
 class FuelCellController
 {
 public:
-    FuelCellController(int cells, int leds);
+    FuelCellController(int id, int cells, int leds);
     FuelCellState getState(void);
     void initialize(struct CRGB *data, Button *lever, PanelLightController *p);
     void update(void);
@@ -29,6 +29,7 @@ public:
 private:
     int totalCells;
     int cellCount;
+    int id;
     FuelCellState currentState;
     CRGB *_leds;
     Button *lever;
@@ -42,7 +43,7 @@ private:
     void sinlon(const struct CRGB &color);
     void sawtooth(void);
     uint32_t timebase;
-
+    CRGB colorArray[3] = {CRGB::Blue, CRGB::Yellow, CRGB::Green};
     CRGBPalette16 currentPalette; // Palette definitions
     // CRGBPalette16 targetPalette;
 };

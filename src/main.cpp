@@ -9,15 +9,13 @@
 
 #include <FastLED.h> // for short list
 #define FRAME_PER_SECOND 1000 / 120
-#define BRIGHTNESS 100
+#define BRIGHTNESS 180
 
 #define TUBE_LED_PIN0 2
 #define TUBE_LED_PIN1 3
 #define TUBE_LED_PIN2 4
 
-#define PANEL_LED_PIN0 5
-#define PANEL_LED_PIN1 6
-#define PANEL_LED_PIN2 7
+#define PANEL_LED_PIN 5
 
 #define FUEL_SWITCH_PIN0 A1
 #define FUEL_SWITCH_PIN1 A2
@@ -27,7 +25,8 @@
 #define NUM_PIPE_LEDS1 47
 #define NUM_PIPE_LEDS2 30
 
-#define NUM_PANEL_LED 24 * 3
+#define NUM_PANEL_LED 72
+#define NUM_STRIPS 4
 
 PotMonitor volumePot(A5, 12);
 //SoundPlayer soundPlayer(18, 15);
@@ -39,17 +38,19 @@ CRGB pipeLeds2[NUM_PIPE_LEDS2];
 
 CRGB panelLED[NUM_PANEL_LED];
 
+CLEDController *controllers[NUM_STRIPS];
+
 Button tubeSwitch0(FUEL_SWITCH_PIN0, 40, false);
 Button tubeSwitch1(FUEL_SWITCH_PIN1, 40, false);
 Button tubeSwitch2(FUEL_SWITCH_PIN2, 40, false);
 
-FuelCellController FuelTube0(3, NUM_PIPE_LEDS0);
-FuelCellController FuelTube1(2, NUM_PIPE_LEDS1);
-FuelCellController FuelTube2(1, NUM_PIPE_LEDS2);
+FuelCellController FuelTube0(0, 3, NUM_PIPE_LEDS0);
+FuelCellController FuelTube1(2, 2, NUM_PIPE_LEDS1);
+FuelCellController FuelTube2(1, 1, NUM_PIPE_LEDS2);
 
-PanelLightController panelController0(PANEL_LED_PIN0);
-PanelLightController panelController1(PANEL_LED_PIN1);
-PanelLightController panelController2(PANEL_LED_PIN2);
+PanelLightController panelController(PANEL_LED_PIN);
+// PanelLightController panelController1(PANEL_LED_PIN1);
+// PanelLightController panelController2(PANEL_LED_PIN2);
 
 void setup()
 {
@@ -57,17 +58,13 @@ void setup()
   delay(5000);
 
   SoundPlayer::instance()->initialize();
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN0, BRG>(pipeLeds0, NUM_PIPE_LEDS0);
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN1, BRG>(pipeLeds1, NUM_PIPE_LEDS1);
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN2, BRG>(pipeLeds2, NUM_PIPE_LEDS2);
+  controllers[0] = &FastLED.addLeds<WS2812B, TUBE_LED_PIN0, GRB>(pipeLeds0, NUM_PIPE_LEDS0);
+  controllers[1] = &FastLED.addLeds<WS2812B, TUBE_LED_PIN1, GRB>(pipeLeds1, NUM_PIPE_LEDS1);
+  controllers[2] = &FastLED.addLeds<WS2812B, TUBE_LED_PIN2, GRB>(pipeLeds2, NUM_PIPE_LEDS2);
 
-  FastLED.addLeds<WS2812B, PANEL_LED_PIN0, BRG>(panelLED, NUM_PANEL_LED);
+  controllers[3] = &FastLED.addLeds<WS2812B, PANEL_LED_PIN, GRB>(panelLED, NUM_PANEL_LED);
 
-  for (int i = 0; i < NUM_PANEL_LED; i++)
-  {
-    Serial.println(i);
-    panelLED[i] = CRGB::Red;
-  }
+  //controllers[3]->showLeds(10);
 
   FastLED.setBrightness(BRIGHTNESS);
 
@@ -75,11 +72,11 @@ void setup()
   tubeSwitch1.begin();
   tubeSwitch2.begin();
 
-  // SoundPlayer::instance()->PlaySound(1);
+  panelController.initialize(panelLED);
 
-  FuelTube0.initialize(pipeLeds0, &tubeSwitch0, &panelController0);
-  FuelTube1.initialize(pipeLeds1, &tubeSwitch1, &panelController1);
-  FuelTube2.initialize(pipeLeds2, &tubeSwitch2, &panelController2);
+  FuelTube0.initialize(pipeLeds0, &tubeSwitch0, &panelController);
+  FuelTube1.initialize(pipeLeds1, &tubeSwitch1, &panelController);
+  FuelTube2.initialize(pipeLeds2, &tubeSwitch2, &panelController);
 }
 
 void loop()
@@ -95,15 +92,20 @@ void loop()
   FuelTube1.update();
   FuelTube2.update();
 
+  FastLED.show();
   if (FuelTube0.getState() == FuelCellState::FULL &&
       FuelTube1.getState() == FuelCellState::FULL &&
       FuelTube2.getState() == FuelCellState::FULL)
   {
 
     Serial.println("all tubes are full");
+    //controllers[3]->showLeds(150);
   }
-
-  FastLED.show();
+  else
+  {
+    //
+    //controllers[3]->showLeds(30);
+  }
 
   delay(FRAME_PER_SECOND);
 }

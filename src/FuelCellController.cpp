@@ -7,10 +7,11 @@
 #include "LEDAnimations.cpp"
 #define LAST_BLOCK_TIME 1500
 
-FuelCellController::FuelCellController(int cells, int leds)
+FuelCellController::FuelCellController(int id, int cells, int leds)
 {
     this->totalCells = cells;
     this->totalLeds = leds;
+    this->id = id;
     currentState = FuelCellState::EMPTY;
 }
 
@@ -57,8 +58,8 @@ void FuelCellController::update()
         {
             Serial.println("Release the fuel cells");
             SoundPlayer::instance()->PlaySound(2);
-            panel->setState(PanelStateEnum::OFF);
-            FastLED.clear ();
+           //panel->setState(id, CRGB::Red);
+            FastLED.clear();
             currentState = FuelCellState::EMPTY;
 
             timebase = millis();
@@ -87,11 +88,11 @@ void FuelCellController::update()
         if (lever->releasedFor(LAST_BLOCK_TIME) && cellCount >= totalCells)
         {
             Serial.println("last block is on hold");
-            FastLED.clear ();
+            FastLED.clear();
             currentState = FuelCellState::FULL;
             timebase = millis();
-            
-            panel->setState(PanelStateEnum::ON);
+//
+            //panel->setState(id, colorArray[id]);
         }
     }
     else if (currentState == FuelCellState::EMPTY)
@@ -99,10 +100,11 @@ void FuelCellController::update()
         if (millis() > pause)
         { // FastLED based non-blocking delay to update/display the sequence.
 
-            sinlon( CRGB::Red); // Call our sequence.
+            sinlon(CRGB::Red); // Call our sequence.
             // test();
             pause = millis() + 50;
         }
+        // panel->setState(id, CRGB::Red);
 
         if (lever->wasReleased())
         {
@@ -110,7 +112,7 @@ void FuelCellController::update()
             Serial.println("lever was pressed state empty: " + String(totalCells) + ", " + String(cellCount));
 
             SoundPlayer::instance()->PlaySound(1);
-            FastLED.clear ();
+            FastLED.clear();
             timebase = millis();
 
             currentState = FuelCellState::FILLING;
@@ -118,7 +120,7 @@ void FuelCellController::update()
     }
 }
 
-void FuelCellController::sinlon( const struct CRGB &color)
+void FuelCellController::sinlon(const struct CRGB &color)
 {
     //     // Updated sinelon (no visual gaps)
     //     // a colored dot sweeping
@@ -149,7 +151,7 @@ void FuelCellController::plasma()
     { // For each of the LED's in the strand, set a brightness based on a wave as follows:
 
         int colorIndex = cubicwave8((k * 23) + thisPhase) / 2 + cos8((k * 15) + thatPhase) / 2; // Create a wave and add a phase change and add another wave with its own phase change.. Hey, you can even change the frequencies if you wish.
-        int thisBright = qsuba(colorIndex, beatsin8(7, 0, 96, timebase));                                 // qsub gives it a bit of 'black' dead space by setting sets a minimum value. If colorIndex < current value of beatsin8(), then bright = 0. Otherwise, bright = colorIndex..
+        int thisBright = qsuba(colorIndex, beatsin8(7, 0, 96, timebase));                       // qsub gives it a bit of 'black' dead space by setting sets a minimum value. If colorIndex < current value of beatsin8(), then bright = 0. Otherwise, bright = colorIndex..
 
         _leds[k] = ColorFromPalette(currentPalette, colorIndex, thisBright, LINEARBLEND); // Let's now add the foreground colour.
     }
@@ -178,7 +180,6 @@ void FuelCellController::sawtooth()
 } // sawtooth()
 
 //https://github.com/atuline/FastLED-Demos/blob/master/inoise8_fire/inoise8_fire.ino
-
 
 FuelCellController::~FuelCellController()
 {
