@@ -23,9 +23,11 @@
 #define FUEL_SWITCH_PIN1 A2
 #define FUEL_SWITCH_PIN2 A3
 
-#define NUM_PIPE_LEDS0 20
-#define NUM_PIPE_LEDS1 30
-#define NUM_PIPE_LEDS2 20
+#define NUM_PIPE_LEDS0 16
+#define NUM_PIPE_LEDS1 47
+#define NUM_PIPE_LEDS2 30
+
+#define NUM_PANEL_LED 24 * 3
 
 PotMonitor volumePot(A5, 12);
 //SoundPlayer soundPlayer(18, 15);
@@ -34,6 +36,8 @@ PotMonitor volumePot(A5, 12);
 CRGB pipeLeds0[NUM_PIPE_LEDS0];
 CRGB pipeLeds1[NUM_PIPE_LEDS1];
 CRGB pipeLeds2[NUM_PIPE_LEDS2];
+
+CRGB panelLED[NUM_PANEL_LED];
 
 Button tubeSwitch0(FUEL_SWITCH_PIN0, 40, false);
 Button tubeSwitch1(FUEL_SWITCH_PIN1, 40, false);
@@ -56,6 +60,14 @@ void setup()
   FastLED.addLeds<WS2812B, TUBE_LED_PIN0, BRG>(pipeLeds0, NUM_PIPE_LEDS0);
   FastLED.addLeds<WS2812B, TUBE_LED_PIN1, BRG>(pipeLeds1, NUM_PIPE_LEDS1);
   FastLED.addLeds<WS2812B, TUBE_LED_PIN2, BRG>(pipeLeds2, NUM_PIPE_LEDS2);
+
+  FastLED.addLeds<WS2812B, PANEL_LED_PIN0, BRG>(panelLED, NUM_PANEL_LED);
+
+  for (int i = 0; i < NUM_PANEL_LED; i++)
+  {
+    Serial.println(i);
+    panelLED[i] = CRGB::Red;
+  }
 
   FastLED.setBrightness(BRIGHTNESS);
 
