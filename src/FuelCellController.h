@@ -43,7 +43,6 @@ private:
     void sinlon(const struct CRGB &color);
     void sawtooth(void);
     uint32_t timebase;
-    CRGB colorArray[3] = {CRGB::Blue, CRGB::Yellow, CRGB::Green};
     CRGBPalette16 currentPalette; // Palette definitions
     // CRGBPalette16 targetPalette;
 };

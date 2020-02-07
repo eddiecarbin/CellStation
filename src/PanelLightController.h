@@ -7,18 +7,27 @@
 
 #define TOTAL_LEDS 24
 
+enum PanelState
+{
+    ON,
+    OFF
+};
+
 class PanelLightController
 {
 public:
-    PanelLightController(int pin);
-    void setState(int panelID, CRGB color);
+    PanelLightController(int idx, CRGB data);
+    void setState(PanelState state);
     void initialize(struct CRGB *data);
     void update(void);
     virtual ~PanelLightController();
 
 private:
-    int pin;
     CRGB *_leds;
+    CRGB color;
+    int index;
+    PanelState state;
+    int startIdx;
     void drawLed(CRGB color);
 };
 

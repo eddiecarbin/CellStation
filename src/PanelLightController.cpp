@@ -1,46 +1,51 @@
 
 #include "PanelLightController.h"
 
-
-#define TOTAL_PANELS 3
-
-PanelLightController::PanelLightController(int pin)
+PanelLightController::PanelLightController(int idx, CRGB data)
 {
-    this->pin = pin;
-    pinMode(pin, OUTPUT);
+    this->color = data;
+    this->index = idx;
+
+    this->startIdx = index * TOTAL_LEDS;
 }
 
-void PanelLightController::setState(int panelID, CRGB color)
+void PanelLightController::setState(PanelState state)
 {
-    /* for (int i = 0; i < TOTAL_LEDS * 3; ++i)
-    {
-        //_leds[i] = CRGB::Red;
-    } */
-    for (int i = 0; i < TOTAL_LEDS; ++i)
-    {
-        _leds[(panelID * TOTAL_LEDS) + i] = color;
-    }
+    if (this->state == state)
+        return;
 
+    this->state = state;
 }
 
 void PanelLightController::initialize(struct CRGB *data)
 {
     this->_leds = data;
-
-    for (int i = 0; i < TOTAL_LEDS * 3; ++i)
-    {
-        //_leds[i] = CRGB::Yellow;
-    }
 }
 
 void PanelLightController::update()
 {
-    /* for (int i = 0; i < TOTAL_LEDS * 3; ++i)
+
+    if (state == PanelState::ON)
     {
-        _leds[i] = CRGB::Yellow;
+        for (int i = startIdx; i < TOTAL_LEDS * 3; ++i)
+        {
+            _leds[i] = color;
+        }
     }
- */
-    FastLED[3].showLeds(10);
+    else
+    {
+        EVERY_N_SECONDS(5)
+        {
+            for (int i = startIdx; i < TOTAL_LEDS * 3; ++i)
+            {
+                _leds[i] = CRGB::Red;
+            }
+        }
+        for (int i = startIdx; i < TOTAL_LEDS; ++i)
+        {
+            _leds[i].fadeToBlackBy(3);
+        }
+    }
 }
 
 PanelLightController::~PanelLightController()

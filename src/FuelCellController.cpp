@@ -6,7 +6,6 @@
 #include "../lib/SoundPlayer/SoundPlayer.h"
 #define LAST_BLOCK_TIME 1500
 
-const static CRGB defaultColor = CRGB::Wheat;
 
 FuelCellController::FuelCellController(int id, int cells, int leds)
 {
@@ -25,7 +24,7 @@ void FuelCellController::initialize(struct CRGB *data, Button *lever, PanelLight
     pause = 0;
     timebase = millis();
 
-    panel->setState(id, defaultColor);
+    panel->setState(PanelState::OFF);
 }
 
 void FuelCellController::drawColor(CRGB color)
@@ -61,7 +60,7 @@ void FuelCellController::update()
         {
             Serial.println("Release the fuel cells");
             SoundPlayer::instance()->PlaySound(2);
-            panel->setState(id, defaultColor);
+            panel->setState(PanelState::OFF);
             FastLED[id].clearLedData();
             //FastLED.clear();
             currentState = FuelCellState::EMPTY;
@@ -98,7 +97,7 @@ void FuelCellController::update()
             currentState = FuelCellState::FULL;
             timebase = millis();
             //
-            panel->setState(id, colorArray[id]);
+            panel->setState(PanelState::ON);
         }
     }
     else if (currentState == FuelCellState::EMPTY)
