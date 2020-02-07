@@ -68,8 +68,6 @@ void setup()
 
   FastLED.addLeds<WS2812B, PANEL_LED_PIN, GRB>(panelLED, NUM_PANEL_LED);
 
-  //controllers[3]->showLeds(10);
-
   FastLED.setBrightness(BRIGHTNESS);
 
   tubeSwitch0.begin();
@@ -107,19 +105,12 @@ void loop()
   FastLED[1].showLeds(BRIGHTNESS);
   FastLED[2].showLeds(BRIGHTNESS);
   FastLED[3].showLeds(10);
-  
+
   if (FuelTube0.getState() == FuelCellState::FULL &&
       FuelTube1.getState() == FuelCellState::FULL &&
       FuelTube2.getState() == FuelCellState::FULL)
   {
-
     Serial.println("all tubes are full");
-    //controllers[3]->showLeds(150);
-  }
-  else
-  {
-    //
-    //controllers[3]->showLeds(30);
   }
 
   delay(FRAME_PER_SECOND);
