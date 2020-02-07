@@ -4,8 +4,9 @@
 
 #include <FuelCellController.h>
 #include "../lib/SoundPlayer/SoundPlayer.h"
-#include "LEDAnimations.cpp"
 #define LAST_BLOCK_TIME 1500
+
+const static CRGB defaultColor = CRGB::Wheat;
 
 FuelCellController::FuelCellController(int id, int cells, int leds)
 {
@@ -23,6 +24,8 @@ void FuelCellController::initialize(struct CRGB *data, Button *lever, PanelLight
     currentPalette = OceanColors_p;
     pause = 0;
     timebase = millis();
+
+    panel->setState(id, defaultColor);
 }
 
 void FuelCellController::drawColor(CRGB color)
@@ -58,8 +61,9 @@ void FuelCellController::update()
         {
             Serial.println("Release the fuel cells");
             SoundPlayer::instance()->PlaySound(2);
-           //panel->setState(id, CRGB::Red);
-            FastLED.clear();
+            panel->setState(id, defaultColor);
+            FastLED[id].clearLedData();
+            //FastLED.clear();
             currentState = FuelCellState::EMPTY;
 
             timebase = millis();
@@ -88,11 +92,13 @@ void FuelCellController::update()
         if (lever->releasedFor(LAST_BLOCK_TIME) && cellCount >= totalCells)
         {
             Serial.println("last block is on hold");
-            FastLED.clear();
+            //FastLED.clear();
+            FastLED[id].clearLedData();
+
             currentState = FuelCellState::FULL;
             timebase = millis();
-//
-            //panel->setState(id, colorArray[id]);
+            //
+            panel->setState(id, colorArray[id]);
         }
     }
     else if (currentState == FuelCellState::EMPTY)
@@ -112,7 +118,9 @@ void FuelCellController::update()
             Serial.println("lever was pressed state empty: " + String(totalCells) + ", " + String(cellCount));
 
             SoundPlayer::instance()->PlaySound(1);
-            FastLED.clear();
+            //FastLED.clear();
+            FastLED[id].clearLedData();
+
             timebase = millis();
 
             currentState = FuelCellState::FILLING;
