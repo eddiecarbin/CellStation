@@ -5,6 +5,8 @@
 #include "DFRobotDFPlayerMini.h"
 #include "SoftwareSerial.h"
 
+#define PLAY_DELAY 500;
+
 SoundPlayer *SoundPlayer::s_instance = 0;
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
@@ -12,6 +14,7 @@ SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 int fileCount = 0;
 bool soundPlaying = false;
 int soundIdx = 1;
+unsigned long lastPlay = 0;
 
 SoundPlayer::SoundPlayer(int pin, int value = 12)
 {
@@ -74,6 +77,12 @@ bool SoundPlayer::isPlaying()
 
 void SoundPlayer::PlaySound(int value = 1)
 {
+    unsigned long m = millis();
+    if (m < lastPlay)
+    {
+        return;
+    }
+
     if (soundPlaying == true)
     {
         // Serial.println("sound is playing stop!");
@@ -82,6 +91,8 @@ void SoundPlayer::PlaySound(int value = 1)
 
     soundPlaying = true;
     myDFPlayer.play(value); //Play the first mp3
+
+    lastPlay = m + PLAY_DELAY;
 }
 
 void SoundPlayer::StopSound()
