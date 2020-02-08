@@ -34,13 +34,17 @@ void PanelLightController::update()
     }
     else
     {
-        EVERY_N_SECONDS(5)
+        unsigned long m = millis();
+
+        if (m > aniDelay)
         {
             for (int i = 0; i < TOTAL_LEDS; ++i)
             {
                 _leds[startIdx + i] = CRGB::Red;
             }
+            aniDelay = m + ANI_DELAY;
         }
+
         for (int i = 0; i < TOTAL_LEDS; ++i)
         {
             _leds[startIdx + i].fadeToBlackBy(3);

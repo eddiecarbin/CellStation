@@ -21,9 +21,9 @@
 #define FUEL_SWITCH_PIN1 A2
 #define FUEL_SWITCH_PIN2 A3
 
-#define NUM_PIPE_LEDS0 16
-#define NUM_PIPE_LEDS1 47
-#define NUM_PIPE_LEDS2 30
+#define NUM_PIPE_LEDS0 11
+#define NUM_PIPE_LEDS1 43
+#define NUM_PIPE_LEDS2 25
 
 #define NUM_PANEL_LED 72
 #define NUM_STRIPS 4
@@ -100,11 +100,14 @@ void loop()
   panelController1.update();
   panelController2.update();
 
+  panelController0.setState(PanelState::ON);
+  panelController1.setState(PanelState::ON);
+  panelController2.setState(PanelState::ON);
   //FastLED.show();
   FastLED[0].showLeds(BRIGHTNESS);
   FastLED[1].showLeds(BRIGHTNESS);
   FastLED[2].showLeds(BRIGHTNESS);
-  FastLED[3].showLeds(10);
+  FastLED[3].showLeds(80);
 
   if (FuelTube0.getState() == FuelCellState::FULL &&
       FuelTube1.getState() == FuelCellState::FULL &&

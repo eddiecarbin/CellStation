@@ -6,6 +6,7 @@
 #include <FastLED.h> // for short list
 
 #define TOTAL_LEDS 24
+#define ANI_DELAY 5 * 1000;
 
 enum PanelState
 {
@@ -28,6 +29,7 @@ private:
     int index;
     PanelState state;
     int startIdx;
+    unsigned long aniDelay;
     void drawLed(CRGB color);
 };
 
