@@ -21,9 +21,9 @@
 #define FUEL_SWITCH_PIN1 A2
 #define FUEL_SWITCH_PIN2 A3
 
-#define NUM_PIPE_LEDS0 11
-#define NUM_PIPE_LEDS1 43
-#define NUM_PIPE_LEDS2 25
+#define NUM_PIPE_LEDS0 43
+#define NUM_PIPE_LEDS1 25
+#define NUM_PIPE_LEDS2 11
 
 #define NUM_PANEL_LED 72
 #define NUM_STRIPS 4
@@ -62,9 +62,9 @@ void setup()
   pinMode(PANEL_LED_PIN, OUTPUT);
 
   SoundPlayer::instance()->initialize();
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN0, GRB>(pipeLeds0, NUM_PIPE_LEDS0);
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN1, GRB>(pipeLeds1, NUM_PIPE_LEDS1);
-  FastLED.addLeds<WS2812B, TUBE_LED_PIN2, GRB>(pipeLeds2, NUM_PIPE_LEDS2);
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN1, GRB>(pipeLeds0, NUM_PIPE_LEDS0);
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN2, GRB>(pipeLeds1, NUM_PIPE_LEDS1);
+  FastLED.addLeds<WS2812B, TUBE_LED_PIN0, GRB>(pipeLeds2, NUM_PIPE_LEDS2);
 
   FastLED.addLeds<WS2812B, PANEL_LED_PIN, GRB>(panelLED, NUM_PANEL_LED);
 
@@ -100,9 +100,9 @@ void loop()
   panelController1.update();
   panelController2.update();
 
-  panelController0.setState(PanelState::ON);
+  /* panelController0.setState(PanelState::ON);
   panelController1.setState(PanelState::ON);
-  panelController2.setState(PanelState::ON);
+  panelController2.setState(PanelState::ON); */
   //FastLED.show();
   FastLED[0].showLeds(BRIGHTNESS);
   FastLED[1].showLeds(BRIGHTNESS);
